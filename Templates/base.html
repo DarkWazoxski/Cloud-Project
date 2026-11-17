@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/styles.css">
+    <title>{% block title %}My App{% endblock %}</title>
+</head>
+<body>
+
+      <nav id="navbar-example2" class="navbar bg-1 px-3 mb-3">
+  <a class="navbar-brand" >Faculty of Science</a>
+  <ul class="nav nav-pills">
+    <li class="nav-item">
+      <a class="nav-link" href="home">Home</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="departments-section">Departments</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="news">News</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="admin-annonces">Admin Zone</a>
+    </li>
+  </ul>
+</nav>
+{% block content %}
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Administration : annonces</title>
+<link rel="stylesheet" href="../static/styles.css">
+</head>
+<body>
+<main class="wrap">
+  <h1>Gestion des annonces</h1>
+  <p class="sub">Ajoutez, modifiez ou supprimez les annonces affichées sur la page d'accueil.</p>
+
+  <div class="layout">
+    <section class="panel" aria-labelledby="form-title">
+      <h2 id="form-title">Nouvelle annonce</h2>
+      <div id="form">
+        <label for="f-title">Titre</label>
+        <input type="text" id="f-title" maxlength="120">
+
+        <label for="f-body">Contenu</label>
+        <textarea id="f-body"></textarea>
+
+        <label for="f-date">Date</label>
+        <input type="date" id="f-date">
+
+        <label for="f-file">Image de l'annonce</label>
+        <input class="form-control" type="file" id="f-file">
+
+        <label class="check"><input type="checkbox" id="f-important"> Annonce importante</label>
+
+        <div class="actions">
+          <button type="button" class="primary" id="f-save">Publier</button>
+          <button type="button" id="f-cancel" hidden>Annuler</button>
+        </div>
+        <p class="status" id="status" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="list-title">
+      <h2 id="list-title">Annonces publiées <span id="count"></span></h2>
+      <ul class="list" id="list"></ul>
+      <p class="empty" id="empty" hidden>Aucune annonce pour le moment. Utilisez le formulaire pour en publier une.</p>
+    </section>
+  </div>
+</main>
+
+<script>
+(function () {
+  /* ---- Stockage ----
+     Les données sont gardées dans le navigateur (localStorage) pour la démo.
+     Pour un vrai site, remplacez store.load / store.save par des appels
+     à votre serveur (fetch vers votre API). Le reste du code ne change pas. */
+  var KEY = 'annonces';
+  var store = {
+    load: function () {
+      try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch (e) { return []; }
+    },
+    save: function (list) {
+      try { localStorage.setItem(KEY, JSON.stringify(list)); return true; } catch (e) { return false; }
+    }
+  };
+
+  var items = store.load();
+  var editingId = null;
+  var confirmingId = null;
+
+  var $ = function (id) { return document.getElementById(id); };
+  var fTitle = $('f-title'), fBody = $('f-body'), fDate = $('f-date'),
+      fImportant = $('f-important'), fSave = $('f-save'), fCancel = $('f-cancel'),
+      status = $('status'), list = $('list'), empty = $('empty'), count = $('count');
+
+  function today() { return new Date().toISOString().slice(0, 10); }
+  function say(msg) { status.textContent = msg; }
+  function persist() { if (!store.save(items)) say('Impossible d\'enregistrer dans ce navigateur.'); }
+  function formatDate(iso) {
+    var d = new Date(iso + 'T00:00:00');
+    return isNaN(d) ? iso : d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  function resetForm() {
+    editingId = null;
+    fTitle.value = ''; fBody.value = ''; fDate.value = today(); fImportant.checked = false;
+    $('form-title').textContent = 'Nouvelle annonce';
+    fSave.textContent = 'Publier';
+    fCancel.hidden = true;
+  }
+
+  function startEdit(item) {
+    editingId = item.id; confirmingId = null;
+    fTitle.value = item.title; fBody.value = item.body; fDate.value = item.date; fImportant.checked = !!item.important;
+    $('form-title').textContent = 'Modifier l\'annonce';
+    fSave.textContent = 'Enregistrer les modifications';
+    fCancel.hidden = false;
+    say('');
+    render();
+    fTitle.focus();
+  }
+
+  function save() {
+    var title = fTitle.value.trim(), body = fBody.value.trim();
+    if (!title || !body) { say('Le titre et le contenu sont obligatoires.'); (title ? fBody : fTitle).focus(); return; }
+    var data = { title: title, body: body, date: fDate.value || today(), important: fImportant.checked };
+    if (editingId) {
+      items = items.map(function (it) { return it.id === editingId ? Object.assign({}, it, data) : it; });
+      say('Annonce modifiée.');
+    } else {
+      data.id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+      items.push(data);
+      say('Annonce publiée.');
+    }
+    persist(); resetForm(); render();
+  }
+
+  function remove(id) {
+    items = items.filter(function (it) { return it.id !== id; });
+    confirmingId = null;
+    if (editingId === id) resetForm();
+    persist(); render(); say('Annonce supprimée.');
+  }
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+
+  function btn(label, cls, onClick) {
+    var b = el('button', 'small ' + (cls || ''), label);
+    b.type = 'button';
+    b.addEventListener('click', onClick);
+    return b;
+  }
+
+  function render() {
+    list.textContent = '';
+    var sorted = items.slice().sort(function (a, b) { return a.date < b.date ? 1 : a.date > b.date ? -1 : 0; });
+    empty.hidden = sorted.length > 0;
+    count.textContent = sorted.length ? '(' + sorted.length + ')' : '';
+
+    sorted.forEach(function (it) {
+      var li = el('li', 'item' + (it.important ? ' important' : '') + (it.id === editingId ? ' editing' : ''));
+      li.appendChild(el('h3', '', it.title));
+
+      var meta = el('div', 'meta');
+      meta.appendChild(el('span', '', formatDate(it.date)));
+      if (it.important) meta.appendChild(el('span', 'badge', 'Importante'));
+      li.appendChild(meta);
+
+      li.appendChild(el('p', '', it.body));
+
+      var actions = el('div', 'actions');
+      actions.appendChild(btn('Modifier', '', function () { startEdit(it); }));
+      if (confirmingId === it.id) {
+        actions.appendChild(btn('Confirmer la suppression', 'danger confirm', function () { remove(it.id); }));
+        actions.appendChild(btn('Annuler', '', function () { confirmingId = null; render(); }));
+      } else {
+        actions.appendChild(btn('Supprimer', 'danger', function () { confirmingId = it.id; render(); }));
+      }
+      li.appendChild(actions);
+      list.appendChild(li);
+    });
+  }
+
+  fSave.addEventListener('click', save);
+  fCancel.addEventListener('click', function () { resetForm(); render(); say(''); });
+
+  resetForm();
+  render();
+})();
+</script>
+</body>
+</html>
