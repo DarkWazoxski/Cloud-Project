@@ -7,6 +7,10 @@
 <link rel="stylesheet" href="../static/styles.css">
 </head>
 <body>
+<h1>Welcome {{username}}</h1>
+<a href="{{ url_for('logout') }}">
+  <button type="button" >Déconnexion</button>
+</a>
 <main class="wrap">
   <h1>Gestion des annonces</h1>
   <p class="sub">Ajoutez, modifiez ou supprimez les annonces affichées sur la page d'accueil.</p>
@@ -170,5 +174,15 @@
   render();
 })();
 </script>
+<script>
+window.addEventListener('pageshow', function(event) {
+
+    if (event.persisted) {
+        window.location.reload();
+    }
+
+});
+</script>
+
 </body>
 </html>

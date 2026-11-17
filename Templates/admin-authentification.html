@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>{% block title %}My Website{% endblock %}</title>
+    <title>Admin Authentication</title>
 
     <link rel="stylesheet"
           href="../static/styles.css">
@@ -17,40 +17,13 @@
 
 <body>
 
-    <nav class="navbar">
-        <a href="{{ url_for('home') }}" class="logo">
-            My Website
-        </a>
+    <form action="/admin_authentication" method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br><br>
 
-        {% if current_user.is_authenticated %}
-            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
 
-            <form method="POST" action="{{ url_for('logout') }}">
-                <input type="hidden" name="csrf_token"
-                       value="{{ csrf_token() }}">
-                <button type="submit" class="nav-button">
-                    Logout
-                </button>
-            </form>
-        {% else %}
-            <a href="{{ url_for('login') }}">Login</a>
-            <a href="{{ url_for('register') }}">Register</a>
-        {% endif %}
-    </nav>
-
-    <main class="container">
-
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% for category, message in messages %}
-                <div class="message {{ category }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endwith %}
-
-        {% block content %}{% endblock %}
-
-    </main>
-
+        <input type="submit" value="Login">
 </body>
 </html>
