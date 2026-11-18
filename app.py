@@ -49,7 +49,8 @@ def base():
 	
 @app.route("/news")
 def news():
-	return render_template("news.html")
+	news= new.query.all() 
+	return render_template("news.html",news=news)
 	
 @app.route("/departments")
 def departments():

@@ -1,0 +1,107 @@
+/* ===== News page – Faculty of Science =====
+   Add to your base.html:
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/news.css') }}">
+*/
+
+:root {
+    --ink: #1c2b36;
+    --muted: #5f6f7b;
+    --paper: #ffffff;
+    --page: #f3f6f8;
+    --line: #d9e1e7;
+    --accent: #1f5f8b;
+}
+
+/* Page heading and intro */
+h1 {
+    max-width: 900px;
+    margin: 2rem auto 0.5rem;
+    padding: 0 1rem;
+    font-size: 2.2rem;
+    color: var(--ink);
+}
+
+h1 + p {
+    max-width: 900px;
+    margin: 0 auto 2rem;
+    padding: 0 1rem;
+    color: var(--muted);
+    line-height: 1.6;
+}
+
+/* News card: image on the left, text on the right */
+.news-card {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    grid-template-areas:
+        "image title"
+        "image date"
+        "image content";
+    column-gap: 1.5rem;
+    align-content: start;
+    max-width: 900px;
+    margin: 0 auto 1.5rem;
+    padding: 1.25rem;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--accent);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(28, 43, 54, 0.06);
+}
+
+.news-card h2 {
+    grid-area: title;
+    margin: 0 0 0.25rem;
+    font-size: 1.4rem;
+    line-height: 1.3;
+    color: var(--ink);
+}
+
+.news-card small {
+    grid-area: date;
+    margin-bottom: 0.75rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+.news-card img {
+    grid-area: image;
+    width: 100%;          /* overrides the width="200" attribute */
+    height: 160px;
+    object-fit: cover;
+    border-radius: 6px;
+    background: var(--page);
+}
+
+.news-card p {
+    grid-area: content;
+    margin: 0;
+    line-height: 1.65;
+    color: var(--ink);
+    /* keeps long articles from taking over the page */
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Tablets and phones: stack image above text */
+@media (max-width: 640px) {
+    .news-card {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "image"
+            "title"
+            "date"
+            "content";
+    }
+
+    .news-card img {
+        height: 200px;
+        margin-bottom: 1rem;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+}

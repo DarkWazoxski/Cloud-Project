@@ -4,10 +4,35 @@
 News - Faculty of Science
 {% endblock %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="../static/css/news.css">
+{% endblock %}
+
 {% block content %}
 
 <h1>Latest News</h1>
 
 <p>Welcome to the news section of the Faculty of Science.</p>
+{% for new in news %}
+    <article class="news-card">
+
+            <h2>{{ new.title }}</h2>
+            <small>
+                Published on: {{ new.date.strftime('%d/%m/%Y') }}
+            </small>
+            <img
+                src="{{ url_for('static', filename='uploads/' + new.image) }}"
+                alt="{{ new.title }}"
+                width="200"
+            >
+
+
+
+            <p>{{ new.content }}</p>
+
+
+
+    </article>
+{%endfor%}
 
 {% endblock %}
