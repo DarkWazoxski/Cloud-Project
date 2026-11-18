@@ -12,16 +12,16 @@
   <a class="navbar-brand" >Faculty of Science</a>
   <ul class="nav nav-pills">
     <li class="nav-item">
-      <a class="nav-link" href="home">Home</a>
+      <a class="nav-link" href="{{url_for('home')}}">Home</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="departments">Departments</a>
+      <a class="nav-link" href="{{url_for('departments')}}">Departments</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="news">News</a>
+      <a class="nav-link" href="{{url_for('news')}}">News</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="admin_authentication">Admin Zone</a>
+      <a class="nav-link" href="{{url_for('admin_auth')}}">Admin Zone</a>
     </li>
   </ul>
 </nav>
