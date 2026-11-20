@@ -8,13 +8,9 @@
     <p class="departments__intro">Choisissez votre département pour accéder à ses cours en ligne.</p>
 
     <ul class="departments__grid">
-      <li class="dept"><a href="https://elearning.univ-boumerdes.dz/course/index.php?categoryid=6276"><h3>Département Biologie</h3><span>Accéder aux cours</span></a></li>
-      <li class="dept"><a href="https://elearning.univ-boumerdes.dz/course/index.php?categoryid=6277"><h3>Département de Mathématiques</h3><span>Accéder aux cours</span></a></li>
-      <li class="dept"><a href="https://elearning.univ-boumerdes.dz/course/index.php?categoryid=6278"><h3>Département Informatique</h3><span>Accéder aux cours</span></a></li>
-      <li class="dept"><a href="https://elearning.univ-boumerdes.dz/course/index.php?categoryid=6279"><h3>Département STAPS</h3><span>Accéder aux cours</span></a></li>
-      <li class="dept"><a href="https://elearning.univ-boumerdes.dz/course/index.php?categoryid=6280"><h3>Département Chimie</h3><span>Accéder aux cours</span></a></li>
-      <li class="dept"><a href="https://elearning.univ-boumerdes.dz/course/index.php?categoryid=6281"><h3>Département Agronomie</h3><span>Accéder aux cours</span></a></li>
-      <li class="dept"><a href="https://elearning.univ-boumerdes.dz/course/index.php?categoryid=6282"><h3>Département Physique</h3><span>Accéder aux cours</span></a></li>
+      {% for department in departments %}
+        <li class="dept"><a href="{{ department.department_link }}" target="_blank"><h3>{{ department.department_name }}</h3><span>{{ department.department_description }}</span></a></li>
+      {% endfor %}
     </ul>
   </div>
 </section>

@@ -37,9 +37,22 @@ class admins(db.Model):
 	username = db.Column(db.String(255), nullable=False)
 	password = db.Column(db.String(255), nullable=False)
 
+class department(db.Model):
+	__tablename__="departments"
+	department_id = db.Column(db.Integer, primary_key=True)
+	department_name = db.Column(db.String(100), nullable=False)
+	department_description = db.Column(db.Text, nullable=False)
+	department_link= db.Column(db.String(1000), nullable=False)
+
+
+
+
+
+
 @app.route("/")
 def home():
-	return render_template("home.html")
+	news= new.query.order_by(new.id.desc()).limit(3).all() 
+	return render_template("home.html",news=news)
 
 
 
@@ -54,7 +67,8 @@ def news():
 	
 @app.route("/departments")
 def departments():
-	return render_template("departments-section.html")
+	departments= department.query.all()
+	return render_template("departments-section.html", departments=departments	)
 
 
 @app.route("/admin_auth", methods=["POST", "GET"])
@@ -114,7 +128,16 @@ def logout():
 	session.clear()
 	flash("You have been logged out.", "info")
 	return redirect(url_for("home"))
-	
+
+
+
+
+@app.after_request
+def add_header(response):
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
 
 
 
