@@ -1,11 +1,12 @@
 from datetime import date, datetime
 import os
+import uuid
 from werkzeug.utils import secure_filename
-from flask import Flask, render_template,url_for,redirect,session,request,flash
+from flask import Flask, render_template,url_for,redirect,session,request,flash, jsonify
 import secrets
 from flask_sqlalchemy import SQLAlchemy
 
-app=Flask(__name__)
+app=Flask(__name__)                                                                                                                                                                                                      
 
 
 
@@ -116,12 +117,13 @@ def admin_announces(username):
 		news = new(title=title, content=content, date=date, image=image)
 		db.session.add(news)
 		db.session.commit()
-		print("NEWS SUCCESSFULLY INSERTED!")
 
 
+
+	news_all= new.query.all()
 
 	
-	return render_template("admin-annonces.html",username=username)
+	return render_template("admin-annonces.html",username=username, news_all=news_all)
 
 @app.route("/logout")
 def logout():
@@ -141,10 +143,40 @@ def add_header(response):
 
 
 
+@app.route("/delete_news/<news_id>", methods=["POST"])
+def delete_news(news_id):
+	post=new.query.get_or_404(news_id)
+	
+	db.session.delete(post)
+	db.session.commit()
+	return redirect(url_for('admin_announces', username=session["username"]))
 
+@app.route("/edit_news/<news_id>", methods=["GET","POST"])
+def edit_news(news_id):
+	if 'username' not in session:
+		return redirect (url_for("admin_auth"))
+	post=new.query.get_or_404(news_id)
 
+	if request.method=="POST":
+		post.title = request.form["title"]
+		post.content = request.form["content"]
+		post.date = datetime.strptime(
+            request.form["date"], "%Y-%m-%d"
+        ).date()
+		file = request.files.get("image")
 
+		if file and file.filename:
+			image = secure_filename(file.filename)
+			file.save(os.path.join(app.config['UPLOAD_FOLDER'], image))
+			post.image=image
 
+		db.session.commit()
+	
+		return redirect(url_for("admin_announces", username=session["username"]))
+	
+
+	return render_template("edit-announce.html", username=session["username"],news=post)
+	
 
 if __name__=="__main__":
 	app.run(debug=True)
