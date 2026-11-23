@@ -4,14 +4,17 @@
 */
 
 :root {
-    --ink: #1c2b36;
-    --muted: #5f6f7b;
-    --paper: #ffffff;
-    --page: #f3f6f8;
-    --line: #d9e1e7;
-    --accent: #1f5f8b;
+    --bg: #f7f9fb; --surface: #ffffff; --text: #14212e; --muted: #55646f;
+    --line: #d5dde4; --accent: #0b5c7a; --on-accent: #ffffff;
+    --danger: #b23a48; --warn-bg: #fff3d6; --warn-text: #6b4a00;
 }
-
+@media (prefers-color-scheme: dark) {
+    :root {
+    --bg: #101a23; --surface: #172430; --text: #e8eef3; --muted: #9fb0bd;
+    --line: #2b3b49; --accent: #6cc3e3; --on-accent: #0b1620;
+    --danger: #ef8c97; --warn-bg: #3a2f10; --warn-text: #f3d98b;
+    }
+}
 /* Page heading and intro */
 h1 {
     max-width: 900px;

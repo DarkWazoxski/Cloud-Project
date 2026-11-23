@@ -1,0 +1,60 @@
+/* ===== Sélecteurs absents de styles.css ===== */
+
+/* Conteneur du contenu de chaque section */
+.container {
+  max-width: 62.5rem;
+}
+
+/* Chaque section */
+section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 6rem;
+}
+
+section :first-child {
+  width: 100%;
+}
+
+/* Aperçu de l'image actuelle */
+.panel img {
+  display: block;
+  width: 150px;
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+  margin-bottom: .75rem;
+  outline: 3px solid var(--line);
+  outline-offset: 2px;
+}
+
+/* Boutons dans les liens (Annuler) */
+.actions a {
+  display: block;
+}
+
+.actions a button,
+.actions > button {
+  width: 100%;
+}
+
+/* ===== Surcharges nécessaires (sélecteurs déjà dans styles.css) =====
+   À supprimer si vous acceptez le rendu par défaut de styles.css */
+
+/* La section interne ne doit pas être en flex (règle "section" ci-dessus) */
+.panel {
+  display: block;
+}
+
+/* Une seule colonne au lieu de 22rem + 1fr */
+@media (min-width: 52rem) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Boutons empilés */
+.actions {
+  flex-direction: column;
+}

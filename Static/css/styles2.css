@@ -1,0 +1,406 @@
+/* ==========================================================================
+   styles.css — feuille de style unique pour tout le site
+   Pages : base, home, departments, news, admin-authentification,
+           admin-announces, edit-announce
+   ========================================================================== */
+ 
+@font-face {
+  font-family: "DragonHunter";
+  src: url("../Fonts/Robotika.otf") format("opentype");
+  font-display: swap;
+}
+
+/* ===== Variables ===== */
+:root {
+  --bg: #f7f9fb;
+  --surface: #ffffff;
+  --text: #14212e;
+  --muted: #55646f;
+  --line: #d5dde4;
+  --accent: #0b5c7a;
+  --on-accent: #ffffff;
+  --danger: #b23a48;
+  --on-danger: #ffffff;
+  --nav-bg: #1b263b;
+  --nav-accent: #f5a524;
+
+  /* Pour utiliser DragonHunter partout : --font-body: var(--font-display); */
+  --font-display: "DragonHunter", system-ui, sans-serif;
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --radius: 6px;
+  --page-w: 68rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #101a23;
+    --surface: #172430;
+    --text: #e8eef3;
+    --muted: #9fb0bd;
+    --line: #2b3b49;
+    --accent: #6cc3e3;
+    --on-accent: #0b1620;
+    --danger: #ef8c97;
+    --on-danger: #101a23;
+    --nav-bg: #0b1620;
+  }
+}
+
+/* ===== Base ===== */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  line-height: 1.2;
+}
+h1 { font-size: clamp(1.6rem, 3.5vw, 2.2rem); margin: 0 0 .5rem; }
+h2 { font-size: clamp(1.3rem, 3vw, 1.7rem); margin: 0 0 .75rem; }
+h3 { font-size: 1.3rem; margin: 1.5rem 0 .5rem; }
+h4 { font-size: 1.1rem; margin: 0 0 .25rem; }
+
+p { margin: 0 0 1rem; }
+small { color: var(--muted); }
+a { color: var(--accent); }
+img { max-width: 100%; height: auto; display: block; }
+[hidden] { display: none !important; }
+
+:is(a, button, input, textarea):focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.sub { color: var(--muted); margin: 0 0 2rem; }
+
+/* Contenu direct du body (home, news) : centré avec marges */
+body > :is(h1, h2, h3, p, ul, article) {
+  width: min(100% - 2rem, var(--page-w));
+  margin-inline: auto;
+}
+body > h1 { margin-top: 2rem; }
+
+/* ===== Barre de navigation (base.html) ===== */
+#navbar-example2 {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: .5rem 1.5rem;
+  padding: .9rem clamp(1rem, 4vw, 2.5rem);
+  margin: 0;
+  background: var(--nav-bg);
+}
+
+.navbar-brand {
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+#navbar-example2 .nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#navbar-example2 .nav-link {
+  display: block;
+  padding: .4rem .9rem;
+  border-radius: var(--radius);
+  color: #fff;
+  font-size: 1.05rem;
+  text-decoration: none;
+  transition: background-color .2s, color .2s;
+}
+
+#navbar-example2 .nav-link:hover {
+  color: var(--nav-accent);
+}
+
+#navbar-example2 .nav-link.active {
+  background: var(--nav-accent);
+  color: var(--nav-bg);
+  font-weight: 600;
+}
+
+/* ===== Cartes (news, annonces) ===== */
+.news-list,
+.announces-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.news-list li,
+.announces-list li,
+.news-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+}
+
+.news-list li p,
+.announces-list li p,
+.news-card p {
+  margin: .5rem 0 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.announces-list li {
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+}
+.announces-list li p { margin: 0; }
+
+/* Page home : lien "voir toutes les actualités" */
+.news-list > p { margin-top: .5rem; }
+
+/* ===== Page news ===== */
+.news-card {
+  margin-block: 1.25rem;
+}
+.news-card h2 { margin-bottom: .25rem; }
+.news-card img {
+  margin: .75rem 0;
+  border-radius: var(--radius);
+}
+
+/* ===== Page départements ===== */
+.departments {
+  padding: clamp(2.5rem, 6vw, 5rem) clamp(1rem, 4vw, 3rem);
+}
+.departments__inner { max-width: 72rem; margin: 0 auto; }
+.departments h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); margin-bottom: .5rem; }
+.departments__intro { color: var(--muted); max-width: 40rem; margin-bottom: 2rem; }
+
+.departments__grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.dept {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: transform .15s, box-shadow .15s;
+}
+.dept:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgb(0 0 0 / .12);
+}
+.dept a {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: .75rem;
+  height: 100%;
+  padding: 1.25rem;
+  color: inherit;
+  text-decoration: none;
+  border-top: 5px solid var(--accent);
+}
+.dept h3 { margin: 0; font-size: 1.15rem; line-height: 1.3; }
+.dept span { color: var(--accent); font-size: .95rem; font-weight: 600; }
+.dept a:hover h3 { text-decoration: underline; text-underline-offset: 3px; }
+
+/* ===== Formulaires (commun) ===== */
+label {
+  display: block;
+  margin: 0 0 .25rem;
+  font-weight: 600;
+  font-size: .95rem;
+}
+
+input[type=text],
+input[type=password],
+input[type=date],
+input[type=file],
+textarea {
+  display: block;
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: .55rem .7rem;
+  font: inherit;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+
+textarea { min-height: 8rem; resize: vertical; }
+
+/* ===== Boutons ===== */
+button,
+input[type=submit] {
+  font: inherit;
+  cursor: pointer;
+  padding: .5rem 1rem;
+  border-radius: 4px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+  transition: filter .15s;
+}
+button:hover,
+input[type=submit]:hover { filter: brightness(.95); }
+
+button.primary,
+input[type=submit] {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: var(--accent);
+  font-weight: 600;
+}
+
+button.secondary {
+  background: transparent;
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Les liens qui entourent un bouton ne sont pas soulignés */
+a:has(> button) { text-decoration: none; }
+
+/* Groupe d'actions : les <a> et <form> sont "transparents" pour que
+   les boutons s'alignent sur la même ligne */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+.actions :is(a, form) { display: contents; }
+.actions button { flex: 1 1 9rem; }
+
+/* Bouton "supprimer" de la liste admin */
+.announces-list .actions form button {
+  color: var(--danger);
+  border-color: var(--danger);
+  background: transparent;
+}
+.announces-list .actions form button:hover {
+  background: var(--danger);
+  color: var(--on-danger);
+  filter: none;
+}
+
+.status {
+  min-height: 1.5rem;
+  margin: .75rem 0 0;
+  color: var(--muted);
+  font-size: .95rem;
+}
+
+/* ===== Page authentification admin ===== */
+form[action="/admin_auth"] {
+  width: min(100% - 2rem, 24rem);
+  margin: 12vh auto 0;
+  padding: 1.75rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+form[action="/admin_auth"] br { display: none; }
+form[action="/admin_auth"] input[type=submit] { width: 100%; margin-top: .5rem; }
+
+/* ===== Pages admin : barre du haut ===== */
+.navigation {
+  background: var(--nav-bg);
+  color: #fff;
+  padding: .75rem clamp(1rem, 4vw, 2rem);
+}
+.navigation .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-inline: auto;
+}
+.navigation h1 { margin: 0; font-size: 1.25rem; color: #fff; }
+
+/* ===== Pages admin / édition : structure ===== */
+.container { max-width: 62.5rem; width: 100%; }
+
+.wrap {
+  margin: 0 auto;
+  padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 4vw, 2rem);
+}
+
+/* Cadre du formulaire : admin (.layout-gestion) et édition (.panel) */
+.layout-gestion,
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+}
+.panel h2,
+.layout-gestion h2 { margin-bottom: 1rem; }
+
+/* Page d'édition : un seul bloc centré */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  max-width: 42rem;
+  margin-inline: auto;
+}
+.panel img {
+  width: 150px;
+  margin-bottom: .75rem;
+  border-radius: 4px;
+  outline: 3px solid var(--line);
+  outline-offset: 2px;
+}
+
+/* Liste des annonces (admin) */
+.layout-list { margin-top: 2rem; }
+
+.image-container {
+  width: 100%;
+  height: 18rem;
+  outline: 3px solid var(--line);
+  outline-offset: 2px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ===== Petits écrans ===== */
+@media (max-width: 40rem) {
+  .image-container { height: 12rem; }
+  #navbar-example2 { position: static; }
+}
+
+
+

@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit</title>
-    <link rel="stylesheet" href="../static/css/styles.css">
-    <link rel="stylesheet" href="../static/css/edit_announce.css">
+    <link rel="stylesheet" href="../static/css/styles2.css">
+    <link rel="stylesheet" href="../static/css/edit_announcess.css">
 </head>
 <body>
     
+  <section class="annonces-gestion">
+    <main class="container wrap">
   <div class="layout" >
     <section class="panel" aria-labelledby="form-title">
-      <h2 id="form-title">Nouvelle annonce</h2>
+      <h2 id="form-title">modifier l'annonce</h2>
       <form id="form" method="POST" action="{{url_for('edit_news', news_id=news.id )}}" enctype="multipart/form-data">
         <label for="f-title">Titre</label>
         <input name ="title" type="text" id="f-title" maxlength="120" value="{{news.title}}">
@@ -37,7 +39,8 @@
       </form>
     </section>
   </div>
-
+  </main>
+  </section>
 
 </body>
 </html>

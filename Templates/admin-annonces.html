@@ -1,70 +1,103 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Administration : annonces</title>
-<link rel="stylesheet" href="../static/css/styles.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Administration : annonces</title>
+  <!-- <link rel="stylesheet" href="../static/css/styles.css"> -->
+  <link rel="stylesheet" href="../static/css/styles2.css">
 </head>
+
 <body>
-<h1>Welcome {{username}}</h1>
-<a href="{{ url_for('logout') }}">
-  <button type="button" >Déconnexion</button>
-</a>
-<main class="wrap">
-  <h1>Gestion des annonces</h1>
-  <p class="sub">Ajoutez, modifiez ou supprimez les annonces affichées sur la page d'accueil.</p>
 
-  <div class="layout" >
-    <section class="panel" aria-labelledby="form-title">
-      <h2 id="form-title">Nouvelle annonce</h2>
-      <form id="form" method="POST" action="{{url_for('admin_announces', username=username )}}" enctype="multipart/form-data">
-        <label for="f-title">Titre</label>
-        <input name ="title" type="text" id="f-title" maxlength="120" >
+  <nav class="navigation">
+    <div class="container">
+      <h1>Welcome {{username}}</h1>
+      <a href="{{ url_for('logout') }}">
+        <button type="button" >Déconnexion</button>
+      </a>
+    </div>
+  </nav>
 
-        <label for="f-body">Contenu</label>
-        <textarea name="content" id="f-body" ></textarea>
 
-        <label for="f-date">Date</label>
-        <input name="date" type="date" id="f-date">
+  <section class="annonces-gestion">
+    <main class="container wrap">
+      <h1>Gestion des annonces</h1>
+      <p class="sub">Ajoutez, modifiez ou supprimez les annonces affichées sur la page d'accueil.</p>
+    
+      <div class="layout-gestion" >
+        <!--<section class="panel" aria-labelledby="form-title">-->
+          <h2 id="form-title" aria-labelledby="form-title">Nouvelle annonce</h2>
+    
+          <form id="form" method="POST" action="{{url_for('admin_announces', username=username )}}" enctype="multipart/form-data">
+            
+            <div class="input-field">
+              <label for="f-title">Titre</label>
+              <input name="title" type="text" id="f-title" maxlength="120" >
+            </div>
+    
+            <div class="input-field">
+              <label for="f-body">Contenu</label>
+              <textarea name="content" id="f-body" ></textarea>
+            </div>
+    
+            <div class="input-field">
+              <label for="f-date">Date</label>
+              <input name="date" type="date" id="f-date">
+            </div>
+    
+            <div class="input-field">
+              <label for="f-file">Image de l'annonce</label>
+              <input name="image" class="form-control" type="file" id="f-file" >
+            </div>
+    
+         
+            <div class="actions">
+              
+              <button type="submit" class="primary" id="f-save">Publier</button>
 
-        <label for="f-file">Image de l'annonce</label>
-        <input name="image" class="form-control" type="file" id="f-file" >
+              <a href="{{ url_for('home') }}">
+                <button type="button" class="secondary">Retour à l'accueil</button>
+              </a>
+    
+              <button type="button" id="f-cancel" hidden>Annuler</button>
+            </div>
 
-        <label class="check"><input name="important" type="checkbox" id="f-important"> Annonce importante</label>
+            <p class="status" id="status" role="status" aria-live="polite"></p>
+          </form>
+        <!--</section>-->
+      </div>
+      <div class="layout-list">
+        <h2>Liste des annonces</h2>
+    
+        <ul class="announces-list">
+            {% for item in news_all %}
+                <li>
+                    <h4>{{ item.title }}</h4>
+    
+                    <p>{{ item.content }}</p>
+    
+                    <small>Publié le {{ item.date.strftime('%d/%m/%Y') }}</small>
+  
+                    <div class="image-container">
+                      <img src="{{ url_for('static', filename='uploads/' + item.image) }}" alt="Image de l'annonce" class="announce-image">
+                    </div>
 
-        <div class="actions">
-          <a href="{{ url_for('home') }}">
-            <button type="button" class="secondary">Retour à l'accueil</button>
-          </a>
-          <button type="submit" class="primary" id="f-save">Publier</button>
-          <button type="button" id="f-cancel" hidden>Annuler</button>
-        </div>
-        <p class="status" id="status" role="status" aria-live="polite"></p>
-      </form>
-    </section>
-  </div>
-  <div >
-    <h2>Liste des annonces</h2>
-    <ul class="announces-list">
-        {% for item in news_all %}
-            <li>
-                <h4>{{ item.title }}</h4>
-                <p>{{ item.content }}</p>
-                <small>Publié le {{ item.date.strftime('%d/%m/%Y') }}</small>
-                    <img src="{{ url_for('static', filename='uploads/' + item.image) }}" alt="Image de l'annonce" class="announce-image">
-                <form action="{{url_for('delete_news', news_id=item.id)}}" method="POST">
-                  <button type="submit"> supprimer</button>
-                </form>
-                <a href="{{url_for('edit_news', news_id=item.id)}}" >
-                  <button type="submit"> modifier</button>
-                </a>
-               
-            </li>
-        {% endfor %}
-    </ul>
-  </div>
-</main>
+                    <div class="actions">
+                      <form action="{{url_for('delete_news', news_id=item.id)}}" method="POST">
+                        <button type="submit"> supprimer</button>
+                      </form>
+      
+                      <a href="{{url_for('edit_news', news_id=item.id)}}" >
+                        <button type="submit"> modifier</button>
+                      </a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+      </div>
+  </main>
+  </section>
 
 
 
